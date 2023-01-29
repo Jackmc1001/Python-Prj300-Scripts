@@ -1,0 +1,13 @@
+download aws shell on laptop/ pi
+login with access keys
+
+create a rekognition collection with python - code from aws
+
+cretae a dynamoDb table
+
+create s3 where it holds all images
+
+create an iam role to give access to dynamodb, s3 and rekognition
+crete a lambda function - add a trigger for s3
+
+add python code to llambda function
