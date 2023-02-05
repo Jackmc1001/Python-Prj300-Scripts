@@ -5,47 +5,37 @@ from decimal import Decimal
 import json
 import urllib
 
-print('Loading function')
-
-dynamodb = boto3.client('dynamodb')
-s3 = boto3.client('s3')
-
-def update_index(tableName, faceId, fullName, studentNo):
-    response = dynamodb.put_item(
-        TableName=tableName,
-        Item={
-            'RekognitionId': {'S': faceId},
-            'FullName': {'S': fullName},
-            'StudentNo': {'S': studentNo}
-            }
-        ) 
-    
 
 def lambda_handler(event, context):
+    s3 = boto3.client('s3')
+    dynamodb = boto3.client('dynamodb')
 
-    # Get the object from the event
-    bucket = event['Records'][0]['s3']['bucket']['name']
-    print("Records: ",event['Records'])
-    key = event['Records'][0]['s3']['object']['key']
-    print("Key: ",bucket)
-    print("Key: ",key)
-    # key = key.encode()
-    # key = urllib.parse.unquote_plus(key)
-    try: 
-        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-            retrieve = s3.head_object(Bucket=bucket,Key=key)
-            personFullName = retrieve['Metadata']['fullname']
-            personStudentNo = retrieve['Metadata']['studentno']
-            personMatch = retrieve['Metadata']['match']
-                
-            update_index('logging_data', faceId, personFullName, personStudentNo)
-                
-        print(response)
+    bucket_name = event['Records'][0]['s3']['bucket']['name']
+    file_key = event['Records'][0]['s3']['object']['key']
 
-            
-        return response
-
-    except Exception as e:
-        print(e)
-        print("Error processing object {} from bucket {}. ".format(key, bucket))
-        raise 
+    # Get data from S3 bucket
+    response = s3.get_object(Bucket=bucket_name, Key=file_key)
+    file_content = response['Body'].read().decode('utf-8')
+    
+    entryFullName = ret['Metadata']['fullname']
+    entryDate = ret['Metadata']['date']
+    entryMatch = ret['Metadata']['match']
+    entryTime = ret['Metadata']['time']
+    entryStudentNo = ret['Metadata']['studentno']
+    entryPass = ret['Metadata']['pass']
+   
+    
+    # Store data in DynamoDB table
+    table_name = 'logging_data'
+    dynamodb.put_item(TableName=table_name, Item=
+                      {'FileName': {'S': file_key},
+                       'Date': {'S': entryDate},
+                       'FullName': {'S': entryFullName},
+                       'Match': {'S': entryMatch},
+                       'Pass': {'N': entryPass},
+                       'StudentId': {'S': entryStudentNo},
+                       'Time': {'S': entryTime},
+                       }
+                      )
+    
+    return 'Data stored in DynamoDB table successfully'

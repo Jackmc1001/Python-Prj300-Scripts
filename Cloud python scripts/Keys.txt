@@ -1,0 +1,11 @@
+acess key : AKIATJE2WS6D2JCCIU32
+
+secret :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
+
+
+C:\Users\S00209393>aws rekognition create-collection --collection-id facrectestjack1 --region eu-west-1
+{
+    "StatusCode": 200,
+    "CollectionArn": "aws:rekognition:eu-west-1:225810225031:collection/facrectestjack1",
+    "FaceModelVersion": "6.0"
+}

@@ -7,10 +7,10 @@ import os
 
 s3 = boto3.resource('s3')
 
-#def sendtos3(Image, Name, studentNo, result):
-  #  file = open(Image+'.jpg','rb')
-    #object = s3.Object('prj300-website', Image)
-   # ret = object.put(Body=file, Metadata={'FullName':Name, 'StudentNo':studentNo, 'Match':result})
+def sendtos3(Image, Date, Time, Name, studentNo, result):
+    file = open(Image,'rb')
+    object = s3.Object('logging-data-bucket-prj300', Image)
+    ret = object.put(Body=file, Metadata={'Date': Date,'Time': Time,'FullName':Name, 'StudentNo':studentNo, 'Match':result})
     
 
 rekognition = boto3.client('rekognition', region_name='eu-west-1')
@@ -18,7 +18,9 @@ dynamodb = boto3.client('dynamodb', region_name='eu-west-1')
 
 #camport 0 is laptop camera
 cam_port = 0
-image_name = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+image_name = datetime.now().strftime('%d_%m_%Y_%H_%M_%S')
+entry_date = datetime.now().strftime('%d/%m/%Y')
+entry_time = datetime.now().strftime('%H:%M:%S')
 
 
 cam = cv2.VideoCapture(cam_port)
@@ -77,7 +79,7 @@ for match in response['FaceMatches']:
         
         found = True
         
-       # sendtos3(image_name, personName, StudentNumber, str(matchconfidence))
+        sendtos3(image_name +'.jpg', entry_date, entry_time, personName, StudentNumber, str(matchconfidence))
         #deletes the image from my own laptop
 os.remove(image_name+".jpg")
 if not found:
