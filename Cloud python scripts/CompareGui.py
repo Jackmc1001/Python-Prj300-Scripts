@@ -31,6 +31,7 @@ class RekoglockGUI:
         
         self.root.mainloop()
         
+        time.sleep(3)
         
     
         
@@ -51,6 +52,7 @@ class RekoglockGUI:
             
         else:
             print("No image detected.")
+            
         
         entry_date = datetime.now().strftime('%d/%m/%Y')
         entry_time = datetime.now().strftime('%H:%M:%S')
@@ -71,6 +73,7 @@ class RekoglockGUI:
                     )
         except:
             print("no faces detected" )
+            self.labelentry["text"]= "No Face detected"
             
             FaceDetected = False 
         found = False
@@ -112,9 +115,17 @@ class RekoglockGUI:
         
         
         os.remove(image_name+".jpg")
+        self.root.update()
+        time.sleep(3)
+        self.button["state"] = "normal"
+        self.labelentry["text"]=" "
+        self.label["text"]="Click button to gain Entry"
+        
         
         
     def Showmsg(self):
+        
+        self.button["state"] = "disabled"
         timer = 3
         while timer != 0:
             self.label["text"]=timer
@@ -130,6 +141,8 @@ def sendtos3(Imagename, Date, Time, Name, studentNo, result, Pass):
     file = open(Imagename,'rb')
     object = s3.Object('logging-data-bucket-prj300', Imagename)
     ret = object.put(Body=file, Metadata={'Date': Date,'Time': Time,'FullName':Name, 'StudentNo':studentNo, 'Match':str(result), 'Pass':str(Pass)})
-            
+    
+    
         
+
 RekoglockGUI()
