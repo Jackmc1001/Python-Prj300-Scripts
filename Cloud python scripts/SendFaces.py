@@ -6,10 +6,10 @@ s3 = boto3.resource('s3')
 Faceimages=[('Jack.jpg', 'Jack', 'S00209393'),
         ('Gatis1.jpg', 'Gatis','S00209875'),
         ('Craig1.jpg', 'Craig','S00209542'),
-        ('Craig2.jpg', 'Craig','S00209542')
-        ,('Sean1.jpg', 'Sean', 'S00210945')
+        
+        ('Sean1.jpg', 'Sean', 'S00210945')
             ]
-open("Jack.jpg", "rb")        
+#open("Jack.jpg", "rb")        
 
 # Iterate through list to upload objects to S3   
 for x in Faceimages:

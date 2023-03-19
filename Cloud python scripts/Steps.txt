@@ -10,4 +10,4 @@ create s3 where it holds all images
 create an iam role to give access to dynamodb, s3 and rekognition
 crete a lambda function - add a trigger for s3
 
-add python code to llambda function
+add python code to llmbda function
